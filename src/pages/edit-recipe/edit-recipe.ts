@@ -24,6 +24,8 @@ export class EditRecipePage implements OnInit {
   private selectDifficultyOptions = ['Easy', 'Medium', 'Hard'];
   private recipeForm: FormGroup;
   private actionSheet: ActionSheet;
+  recipe: Recipe;
+  recipeIndex: number;
 
   constructor(
   	private navController: NavController,
@@ -36,15 +38,36 @@ export class EditRecipePage implements OnInit {
 
   ngOnInit() {
     this.mode = this.navParams.get('mode');
+
+    if (this.mode == 'Edit') {
+    	this.recipe = this.navParams.get('recipe');
+    	this.recipeIndex = this.navParams.get('index');
+    }
+
     this.initializeForm();
   }
 
   private initializeForm() {
+  	let title = null;
+  	let description = null;
+  	let difficulty = 'Medium';
+  	let ingredients = [];
+
+  	if (this.mode == 'Edit') {
+  		title = this.recipe.title;
+  		description = this.recipe.description;
+  		difficulty = this.recipe.difficulty;
+
+  		this.recipe.ingredients.forEach(ingredient => {
+  			ingredients.push(new FormControl(ingredient.name, Validators.required));
+		  });
+	  }
+
     this.recipeForm = this.formBuilder.group({
-      title: [null, Validators.required],
-      description: [null, Validators.required],
-      difficulty: ['Medium', Validators.required],
-      ingredients: new FormArray([])
+      title: [title, Validators.required],
+      description: [description, Validators.required],
+      difficulty: [difficulty, Validators.required],
+      ingredients: new FormArray(ingredients)
     });
   }
 
@@ -58,7 +81,14 @@ export class EditRecipePage implements OnInit {
 		  });
 	  }
 
-  	this.recipeService.addRecipe(new Recipe(value.title, value.description, value.difficulty, ingredients));
+	  const recipe = new Recipe(value.title, value.description, value.difficulty, ingredients);
+
+	  if (this.mode == 'Edit') {
+  		this.recipeService.updateRecipe(this.recipeIndex, recipe)
+	  } else {
+		  this.recipeService.addRecipe(recipe);
+	  }
+
   	this.recipeForm.reset();
   	this.navController.popToRoot();
   }
