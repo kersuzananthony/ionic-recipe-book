@@ -56,10 +56,18 @@ export class EditRecipePage implements OnInit {
           }
         },
         {
-          text: 'Remove Ingredient',
+          text: 'Remove all Ingredients',
           role: 'destructive',
           handler: () => {
             console.log('Remove ingredient pressed');
+            const fArray: FormArray = <FormArray>this.recipeForm.controls['ingredients'];
+            const fArraylength = fArray.length;
+
+            if (fArraylength > 0) {
+              for (let i = fArraylength - 1; i >= 0; i--) {
+                fArray.removeAt(i);
+              }
+            }
           }
         },
         {
