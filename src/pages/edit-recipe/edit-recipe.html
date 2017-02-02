@@ -45,6 +45,10 @@
       </ion-item>
     </ion-list>
 
-    <button ion-button block type="submit">{{ mode }} Recipe</button>
+    <button
+		    ion-button
+		    block
+		    [disabled]="!recipeForm.valid"
+		    type="submit">{{ mode }} Recipe</button>
   </form>
 </ion-content>
