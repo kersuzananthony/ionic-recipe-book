@@ -3,7 +3,7 @@ import { Recipe } from "../models/recipe";
 
 @Injectable()
 export class RecipeService {
-	private recipes: Recipe[];
+	private recipes: Recipe[] = [];
 
 	getRecipes(): Recipe[] {
 		return this.recipes.slice();
