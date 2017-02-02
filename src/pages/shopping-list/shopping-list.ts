@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
+import { NgForm } from "@angular/forms";
 
 /*
   Generated class for the ShoppingList page.
@@ -19,4 +20,7 @@ export class ShoppingListPage {
     console.log('ionViewDidLoad ShoppingListPage');
   }
 
+  onFormSubmit(form: NgForm) {
+    console.log(form.value);
+  }
 }
