@@ -37,4 +37,12 @@
         block>Add
     </button>
   </form>
+
+  <ion-list>
+    <ion-item
+        *ngFor="let ingredient of ingredients; let i = index"
+        (click)="onDeleteIngredient(i)">
+      <h3>{{ ingredient.name }} - ({{ ingredient.amount }})</h3>
+    </ion-item>
+  </ion-list>
 </ion-content>
