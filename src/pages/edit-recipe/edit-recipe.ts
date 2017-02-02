@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 
-import { 
-  NavParams, 
-  ActionSheet, 
+import {
+  NavParams,
+  ActionSheet,
   ActionSheetController,
-  AlertController
- } from 'ionic-angular';
+  AlertController, ToastController
+} from 'ionic-angular';
 
 
 @Component({
@@ -24,7 +24,8 @@ export class EditRecipePage implements OnInit {
     private navParams: NavParams,
     private formBuilder: FormBuilder,
     private actionSheetCtrl: ActionSheetController,
-    private alertCtrl: AlertController) {}
+    private alertCtrl: AlertController,
+    private toastCtrl: ToastController) {}
 
   ngOnInit() {
     this.mode = this.navParams.get('mode');
@@ -67,6 +68,14 @@ export class EditRecipePage implements OnInit {
               for (let i = fArraylength - 1; i >= 0; i--) {
                 fArray.removeAt(i);
               }
+
+	            const toast = this.toastCtrl.create({
+		            message: 'All ingredients were deleted!',
+		            duration: 1000,
+		            position: 'bottom'
+	            });
+
+	            toast.present();
             }
           }
         },
@@ -104,12 +113,28 @@ export class EditRecipePage implements OnInit {
           text: 'Add',
           handler: (data) => {
             if (data.name.trim() == '' || data.name == null) {
+	            const toast = this.toastCtrl.create({
+								message: 'Please enter a valid value!',
+		            duration: 1000,
+		            position: 'bottom'
+	            });
+
+	            toast.present();
+
               return;
             }
 
             (<FormArray>this.recipeForm.controls['ingredients']).push(
               new FormControl(data.name, Validators.required)
             );
+
+	          const toast = this.toastCtrl.create({
+		          message: 'New ingredient added!',
+		          duration: 1000,
+		          position: 'bottom'
+	          });
+
+	          toast.present();
           }
         }
       ]
