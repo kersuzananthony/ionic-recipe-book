@@ -37,4 +37,14 @@ export class ShoppingListService {
 			.put(databaseUrl + userId + '/shopping-list.json?auth=' + token, this.ingredients)
 			.map((response: Response) => response.json());
 	}
+
+	fetchList(token: string) {
+		const userId = this.authService.getActiveUser().uid;
+		const databaseUrl: string = <string>apiKeys['firebaseDatabaseUrl'];
+
+		return this.http
+			.get(databaseUrl + userId + '/shopping-list.json?auth=' + token)
+			.map((response: Response) => response.json())
+			.do(data => this.ingredients = data);
+	}
 }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, PopoverCmp, PopoverController } from 'ionic-angular';
+import { NavController, AlertController, PopoverController, LoadingController, Loading } from 'ionic-angular';
 import { NgForm } from "@angular/forms";
 import { ShoppingListOptionsPage } from "./shopping-list-options";
 
@@ -21,12 +21,15 @@ import { Ingredient } from "../../models/ingredient";
 export class ShoppingListPage {
 
   private ingredients: Ingredient[];
+  private loading: Loading;
 
   constructor(
     public navCtrl: NavController,
     private shoppingService: ShoppingListService,
     private authService: AuthService,
-    private popoverCtrl: PopoverController) {}
+    private popoverCtrl: PopoverController,
+    private alertCtrl: AlertController,
+    private loadingCtrl: LoadingController) {}
 
   ionViewWillEnter() {
     this.loadIngredients();
@@ -52,22 +55,82 @@ export class ShoppingListPage {
   	const popover = this.popoverCtrl.create(ShoppingListOptionsPage);
 
   	popover.onDidDismiss(data => {
-  		if (data['action'] == 'load') {
-
-		  } else if (data['action'] == 'store') {
-  			this.authService.getActiveUser().getToken()
-				  .then((token:string) => {
-						this.shoppingService.storeList(token)
-							.subscribe(
-								() => console.log('success'),
-								(error) => console.log('error', error)
-							);
-				  });
+  		if (data != null && data['action'] == 'load') {
+				this.loadRemoteIngredients();
+		  } else if (data != null && data['action'] == 'store') {
+  			this.saveRemoteIngredients();
 		  }
 	  });
 
   	popover.present({
   		ev: event
 	  });
+	}
+
+	private saveRemoteIngredients() {
+  	this.displayLoading('Saving data to the server...');
+
+		this.authService.getActiveUser().getToken()
+			.then((token:string) => {
+				this.shoppingService.storeList(token)
+					.subscribe(
+						() => {
+							this.loading.dismiss();
+							console.log('success');
+						},
+						(error) => {
+							this.loading.dismiss();
+							this.displayError(error.message || 'Cannot save data to the server');
+							console.log('error', error)
+						}
+					);
+			});
+	}
+
+	private loadRemoteIngredients() {
+  	this.displayLoading('Loading data from server...');
+
+		this.authService.getActiveUser().getToken()
+			.then((token: string) => {
+				this.shoppingService.fetchList(token)
+					.subscribe(
+						(list: Ingredient[]) => {
+							this.loading.dismiss();
+							if (list) {
+								this.ingredients = list;
+							} else {
+								this.ingredients = [];
+							}
+						},
+						(error) => {
+							this.loading.dismiss();
+							this.displayError(error.message || 'Cannot fetch data from the server');
+							console.log(error.message || 'Cannot fetch data from the server');
+						}
+					);
+			});
+	}
+
+	private displayLoading(message: string) {
+  	this.loading = this.loadingCtrl.create({
+  		content: message
+	  });
+
+  	this.loading.present();
+	}
+
+	private displayError(message: string) {
+  	const alert = this.alertCtrl.create({
+  		title: 'An Error occured!',
+		  message: message,
+		  buttons: [
+			  {
+			  	text: 'OK',
+				  role: 'cancel'
+			  }
+		  ]
+	  });
+
+  	alert.present();
 	}
 }
