@@ -4,6 +4,7 @@ import { MyApp } from './app.component';
 
 import { TabsPage } from "../pages/tabs/tabs";
 import { ShoppingListPage } from "../pages/shopping-list/shopping-list";
+import { ShoppingListOptionsPage } from "../pages/shopping-list/shopping-list-options";
 import { RecipesPage } from "../pages/recipes/recipes";
 import { RecipePage } from "../pages/recipe/recipe";
 import { EditRecipePage } from "../pages/edit-recipe/edit-recipe";
@@ -20,6 +21,7 @@ import { SignupPage } from "../pages/signup/signup";
     MyApp,
     TabsPage,
     ShoppingListPage,
+	  ShoppingListOptionsPage,
     RecipesPage,
     RecipePage,
     EditRecipePage,
@@ -34,6 +36,7 @@ import { SignupPage } from "../pages/signup/signup";
     MyApp,
     TabsPage,
     ShoppingListPage,
+	  ShoppingListOptionsPage,
     RecipesPage,
     RecipePage,
     EditRecipePage,
