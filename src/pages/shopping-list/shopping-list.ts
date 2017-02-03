@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
 import { NavController, PopoverCmp, PopoverController } from 'ionic-angular';
 import { NgForm } from "@angular/forms";
-import { ShoppingListService } from "../../services/shopping.service";
-import { Ingredient } from "../../models/ingredient";
 import { ShoppingListOptionsPage } from "./shopping-list-options";
+
+import { ShoppingListService } from "../../services/shopping.service";
+import { AuthService } from "../../services/auth.service";
+
+import { Ingredient } from "../../models/ingredient";
 
 /*
   Generated class for the ShoppingList page.
@@ -22,6 +25,7 @@ export class ShoppingListPage {
   constructor(
     public navCtrl: NavController,
     private shoppingService: ShoppingListService,
+    private authService: AuthService,
     private popoverCtrl: PopoverController) {}
 
   ionViewWillEnter() {
@@ -45,7 +49,24 @@ export class ShoppingListPage {
   }
 
 	onShowOptions(event: MouseEvent) {
-  	this.popoverCtrl.create(ShoppingListOptionsPage).present({
+  	const popover = this.popoverCtrl.create(ShoppingListOptionsPage);
+
+  	popover.onDidDismiss(data => {
+  		if (data['action'] == 'load') {
+
+		  } else if (data['action'] == 'store') {
+  			this.authService.getActiveUser().getToken()
+				  .then((token:string) => {
+						this.shoppingService.storeList(token)
+							.subscribe(
+								() => console.log('success'),
+								(error) => console.log('error', error)
+							);
+				  });
+		  }
+	  });
+
+  	popover.present({
   		ev: event
 	  });
 	}
