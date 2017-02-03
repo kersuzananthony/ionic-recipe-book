@@ -10,6 +10,8 @@ import { EditRecipePage } from "../pages/edit-recipe/edit-recipe";
 
 import { ShoppingListService } from "../services/shopping.service";
 import { RecipeService } from "../services/recipe.service";
+import { AuthService } from "../services/auth.service";
+
 import { SigninPage } from "../pages/signin/signin";
 import { SignupPage } from "../pages/signup/signup";
 
@@ -41,7 +43,8 @@ import { SignupPage } from "../pages/signup/signup";
   providers: [
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ShoppingListService,
-	  RecipeService
+	  RecipeService,
+	  AuthService
   ]
 })
 export class AppModule {}

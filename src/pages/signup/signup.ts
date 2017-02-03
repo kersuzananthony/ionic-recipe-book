@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
 
 import { NgForm } from "@angular/forms";
+import { AuthService } from "../../services/auth.service";
 
 /*
   Generated class for the Signup page.
@@ -15,10 +15,14 @@ import { NgForm } from "@angular/forms";
 })
 export class SignupPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {}
+	constructor(private authService: AuthService) {}
 
   onSubmit(form: NgForm) {
-  	console.log(form.value);
+  	const formValue = form.value;
+
+  	this.authService.signup(formValue.email, formValue.password)
+		  .then(data => console.log(data))
+		  .catch(error => console.log('Signup failed!', error));
   }
 
 }
