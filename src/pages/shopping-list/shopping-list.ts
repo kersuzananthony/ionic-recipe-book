@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, AlertController, PopoverController, LoadingController, Loading } from 'ionic-angular';
 import { NgForm } from "@angular/forms";
-import { ShoppingListOptionsPage } from "./shopping-list-options";
+import { DatabaseOptionsPage } from "../database-options/database-options";
 
 import { ShoppingListService } from "../../services/shopping.service";
 import { AuthService } from "../../services/auth.service";
@@ -52,7 +52,7 @@ export class ShoppingListPage {
   }
 
 	onShowOptions(event: MouseEvent) {
-  	const popover = this.popoverCtrl.create(ShoppingListOptionsPage);
+  	const popover = this.popoverCtrl.create(DatabaseOptionsPage);
 
   	popover.onDidDismiss(data => {
   		if (data != null && data['action'] == 'load') {

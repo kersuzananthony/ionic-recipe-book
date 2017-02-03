@@ -45,6 +45,8 @@ export class ShoppingListService {
 		return this.http
 			.get(databaseUrl + userId + '/shopping-list.json?auth=' + token)
 			.map((response: Response) => response.json())
-			.do(data => this.ingredients = data);
+			.do(data => {
+				if (data != null) this.ingredients = data;
+			});
 	}
 }
